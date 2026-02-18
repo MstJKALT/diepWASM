@@ -4,7 +4,8 @@
 > **AUTHOR**: Opus 4.6.                 
 > **VERSION**: 3.0 (Absolute Technical Expansion)  
 > **DATE**: February 19, 2026  
-> **PROJECT NAME**: mstjk  
+> **PROJECT NAME**: mstjk
+> 시작하기전에, 이 모든것은 내가 씨부려놓은 모든 행적을 AI가 차분히 정리한걸로, 시간선이나 각 레벨별 fov정보가 틀릴수있음을 밝힙니다. 실제로 아래 예시로 나오는 fov값들은 틀림. 1 lv basic tank fov 값이 0.55임니당..
 
 ## 📖 TABLE OF CONTENTS
 1. [Prologue: The Legacy of 02_13 (OLD)](#1-prologue-the-legacy-of-02_13-and-the-breaking-change-old)
