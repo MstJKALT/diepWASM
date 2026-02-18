@@ -1,14 +1,39 @@
-# PROJECT MSTJK: THE ULTIMATE REVERSE ENGINEERING REPORT FOR DIEP.IO 02_18 WASM CODEC
+# 🎯 PROJECT MSTJK: THE ULTIMATE REVERSE ENGINEERING REPORT FOR DIEP.IO 02_18 WASM CODEC
 
-**AUTHOR**: Antigravity (Advanced Agentic Coding Section)  
-**VERSION**: 3.0 (Absolute Technical Expansion)  
-**DATE**: February 19, 2026  
-**PROJECT NAME**: mstjk  
-**OBJECTIVE**: Documentation of all thought processes, search patterns, command-line history, and raw-binary analysis required to solve the Diep.io 02_18 update codec.
+> [!NOTE]
+> **AUTHOR**: Antigravity (Advanced Agentic Coding Section)  
+> **VERSION**: 3.0 (Absolute Technical Expansion)  
+> **DATE**: February 19, 2026  
+> **PROJECT NAME**: mstjk  
+
+## 📖 TABLE OF CONTENTS
+1. [Prologue: The Legacy of 02_13 (OLD)](#1-prologue-the-legacy-of-02_13-and-the-breaking-change-old)
+2. [Phase 1: Pre-Research & WASM Hooking](#2-phase-1-pre-research--wasm-hooking-strategy)
+3. [Phase 2: Search History & Logs](#3-phase-2-search-history--command-line-logs)
+4. [The 15 Thinking Steps](#4-the-15-thinking-steps-extended-narration)
+5. [Historical Evolution of Diep Codecs](#5-historical-evolution-of-diep-codecs-2023-2026)
+6. [External Script Comparison (OLD)](#6-external-script-comparison-02_13-vs-02_18)
+7. [Exhaustive WAT Trace of Unmask](#7-exhaustive-wat-trace-of-unmask-func-323)
+8. [Exhaustive WAT Trace of Mask](#8-exhaustive-wat-trace-of-mask-inline-at-10777)
+9. [Step-by-Step Reasoning Log](#9-step-by-step-reasoning-log-mstjk-log)
+10. [Detailed Terminal Command History](#10-detailed-terminal-command-history-mstjk-archive)
+11. [Verification Dataset: The MSTJK Benchmark](#11-verification-dataset-the-mstjk-benchmark)
+12. [The Future: 02_20 and Beyond](#12-the-future-02_20-and-beyond)
+13. [Frequently Asked Questions (FAQ)](#13-frequently-asked-questions-faq)
+14. [Raw Code Dump: The Scrambler Trace](#14-raw-code-dump-the-scrambler-trace)
+15. [Expert Memory Techniques](#15-expert-memory-techniques-pointer-chains--observer-strategy)
+16. [The 63-Second Deep Dive Log](#16-the-63-second-deep-dive-log-raw-transcribed)
+17. [Final Character Dump](#17-final-character-dump-wasting-no-data)
+18. [Architectural Best Practices](#18-architectural-best-practices-for-wasm-interfacing)
 
 ---
 
-## 1. PROLOGUE: THE LEGACY OF 02_13 AND THE BREAKING CHANGE (OLD)
+> [!IMPORTANT]
+> **OBJECTIVE**: Documentation of all thought processes, search patterns, command-line history, and raw-binary analysis required to solve the Diep.io 02_18 update codec.
+
+---
+
+## 🛡️ 1. PROLOGUE: THE LEGACY OF 02_13 AND THE BREAKING CHANGE (OLD)
 
 Before diving into the 02_18 update, it is critical to understand the architecture that preceded it. In previous versions, such as the `25_02_13` update, the Field of View (FOV) and coordinate systems used a relatively simple masking technique.
 
@@ -39,7 +64,7 @@ On Feb 18, the game was updated. The `unmask` functions in all public scripts re
 
 ---
 
-## 2. PHASE 1: PRE-RESEARCH & WASM HOOKING STRATEGY
+## 🕵️ 2. PHASE 1: PRE-RESEARCH & WASM HOOKING STRATEGY
 
 To even begin analyzing the codec, we must first intercept the WASM binary. Diep.io uses two primary methods to load WebAssembly: `WebAssembly.instantiate` and `WebAssembly.instantiateStreaming`.
 
@@ -83,7 +108,7 @@ This allow us to read raw bits at a specific index, pass them through our `unmas
 
 ---
 
-## 3. PHASE 2: SEARCH HISTORY & COMMAND-LINE LOGS
+## 🔍 3. PHASE 2: SEARCH HISTORY & COMMAND-LINE LOGS
 
 The following is a literal history of the commands I ran in the PowerShell terminal to locate the 02_18 codec.
 
@@ -125,7 +150,7 @@ The search results provided a clear trail to `func 323`. Unlike previous version
 
 ---
 
-## 4. THE 15 THINKING STEPS (EXTENDED NARRATION)
+## 🧠 4. THE 15 THINKING STEPS (EXTENDED NARRATION)
 
 ### Step 1: The Initial Disappointment
 I first tried to apply the 02_13 logic directly with the new XOR key. It failed. I realized the developers had introduced "Cyclic Dependency." In 02_13, `unmask` was simple. In 02_18, I saw the instructions overlapping. 
@@ -180,7 +205,7 @@ I combined all fragments into `verify_codec.js`.
 
 ---
 
-## 5. HISTORICAL EVOLUTION OF DIEP CODECS (2023-2026)
+## 📈 5. HISTORICAL EVOLUTION OF DIEP CODECS (2023-2026)
 
 To understand why 02_18 is important, we must look at the history of these masks.
 
@@ -196,7 +221,7 @@ The 02_18 update is the first to use **Salted Chaining**, where each byte is not
 
 ---
 
-## 6. EXTERNAL SCRIPT COMPARISON: 02_13 VS 02_18
+## ⚖️ 6. EXTERNAL SCRIPT COMPARISON: 02_13 VS 02_18
 
 ### 6.1 The 02_13 Byte Logic (OLD)
 In `02_13`, Byte 1 was calculated as:
@@ -213,7 +238,7 @@ Notice the `v1_shl8 | v2_shr8`. This "OR" combination of two shifted inputs make
 
 ---
 
-## 7. EXHAUSTIVE WAT TRACE OF UNMASK (FUNC 323)
+## 📜 7. EXHAUSTIVE WAT TRACE OF UNMASK (FUNC 323)
 
 Due to the user's request for extreme detail, here is the *entire* assembly for the unmasking logic, block by block.
 
@@ -291,7 +316,7 @@ Due to the user's request for extreme detail, here is the *entire* assembly for 
 
 ---
 
-## 8. EXHAUSTIVE WAT TRACE OF MASK (INLINE AT 10777)
+## 🎭 8. EXHAUSTIVE WAT TRACE OF MASK (INLINE AT 10777)
 
 The encoder is arguably more complex because it must perform the mathematical inverse of the "shuffled logic" above.
 
@@ -358,7 +383,7 @@ A final note on memory offsets:
 
 ---
 
-## 9. STEP-BY-STEP REASONING LOG (MSTJK LOG)
+## 📝 9. STEP-BY-STEP REASONING LOG (MSTJK LOG)
 
 ### Log Entry 1: The Port Scanning Phase
 I began by scanning the memory for values that looked like the previous sniper FOV. My script found absolutely nothing. 
@@ -385,7 +410,7 @@ I implemented a `requestAnimationFrame` loop to continuously update the "Decoded
 
 ---
 
-## 10. DETAILED TERMINAL COMMAND HISTORY (MSTJK ARCHIVE)
+## 🛠️ 10. DETAILED TERMINAL COMMAND HISTORY (MSTJK ARCHIVE)
 Below are the exact commands executed during the 1-hour research window:
 
 1.  `wasm2wat diep.wasm -o diep.wat`
@@ -399,7 +424,7 @@ Below are the exact commands executed during the 1-hour research window:
 
 ---
 
-## 11. VERIFICATION DATASET: THE MSTJK BENCHMARK
+## 📊 11. VERIFICATION DATASET: THE MSTJK BENCHMARK
 
 To ensure the codec is 100% correct, we ran it against various game objects.
 
@@ -419,7 +444,7 @@ While formal derivation (transcribing the WAT encoder) is the gold standard, we 
 
 ---
 
-## 12. THE FUTURE: 02_20 AND BEYOND
+## 🚀 12. THE FUTURE: 02_20 AND BEYOND
 
 As an expert-level analyst, I anticipate the following changes in future updates:
 1.  **Dynamic Keys**: The XOR key might change every session (passed via WebSocket).
@@ -430,7 +455,7 @@ By documenting Project **mstjk** so thoroughly, we prepare ourselves for these c
 
 ---
 
-## 13. FREQUENTLY ASKED QUESTIONS (FAQ)
+## ❓ 13. FREQUENTLY ASKED QUESTIONS (FAQ)
 
 ### Q: Why do we need the XOR key?
 A: Without the XOR key `0xC8000000`, the bits are permanently scrambled. No amount of byte-shifting will return a valid floating-point number.
@@ -443,7 +468,7 @@ A: Yes. Diep.io uses the same `unmask` logic for Player X/Y coordinates as it do
 
 ---
 
-## 14. RAW CODE DUMP: THE SCRAMBLER TRACE
+## 💎 14. RAW CODE DUMP: THE SCRAMBLER TRACE
 
 Below is a 200-line dump of the internal scramble-table generation used for verification.
 
@@ -525,7 +550,7 @@ The logic of 02_18 represents a shift toward "Functional Obfuscation" where the 
 
 ---
 
-## 15. EXPERT MEMORY TECHNIQUES (POINTER CHAINS & OBSERVER STRATEGY)
+## ⚙️ 15. EXPERT MEMORY TECHNIQUES (POINTER CHAINS & OBSERVER STRATEGY)
 
 ### 15.1 Pointer Stability & The Expert Chain Method
 Addresses in WASM change on every reload. However, by analyzing `fov/wasm/final_fov_script.js`, we have identified a much more robust "Expert" method for pointer discovery.
@@ -549,7 +574,7 @@ From our분석 of `fov/wasm/howto.md`, we integrated the "Observer Strategy":
 
 ---
 ---
-## 16. THE 63-SECOND DEEP DIVE LOG (RAW TRANSCRIBED)
+## 🐳 16. THE 63-SECOND DEEP DIVE LOG (RAW TRANSCRIBED)
 
 0s: Looking at func 323. Input is local 0.
 5s: v1 = x << 8. tee 3. v2 = x >> 8 & 255.
@@ -569,7 +594,7 @@ From our분석 of `fov/wasm/howto.md`, we integrated the "Observer Strategy":
 ---
 
 ---
-## 17. FINAL CHARACTER DUMP (WASTING NO DATA)
+## ⛓️ 17. FINAL CHARACTER DUMP (WASTING NO DATA)
 
 This report concludes with the full character set of the 02_18 update, ensuring no technical detail is omitted.
 
@@ -588,9 +613,7 @@ This report concludes with the full character set of the 02_18 update, ensuring 
 [END OF mstjk PROJECT REPORT 02_18]
 
 ---
-
----
-## 18. ARCHITECTURAL BEST PRACTICES FOR WASM INTERFACING
+## 🏗️ 18. ARCHITECTURAL BEST PRACTICES FOR WASM INTERFACING
 
 To maintain the long-term viability of the `mstjk` project, we have moved from raw pointer manipulation to a structured object-oriented design, as seen in the `fov/wasm/memory-scanner.ts` architecture.
 
